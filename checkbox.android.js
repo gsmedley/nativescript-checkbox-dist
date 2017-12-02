@@ -119,6 +119,8 @@ var CheckBox = (function (_super) {
         },
         set: function (scale) {
             this._scale = scale;
+            this._android.setScaleX(parseFloat(this._scale));
+            this._android.setScaleY(parseFloat(this._scale));
         },
         enumerable: true,
         configurable: true
@@ -233,10 +235,10 @@ var CheckBox = (function (_super) {
             if (this.fillColor) {
                 this.updateFillColor(this.fillColor);
             }
-        }
-        if (this.scale) {
-            this._android.setScaleX(parseFloat(this.scale));
-            this._android.setScaleY(parseFloat(this.scale));
+            if (this._scale) {
+                this._android.setScaleX(parseFloat(this._scale));
+                this._android.setScaleY(parseFloat(this._scale));
+            }
         }
         return this._android;
     };
