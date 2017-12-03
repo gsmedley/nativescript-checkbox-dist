@@ -19,6 +19,14 @@ var onCheckColorProperty = new view_1.CssProperty({
         return String(v);
     }
 });
+var fontSizeProperty = new view_1.CssProperty({
+    name: "fontSize",
+    cssName: "font-size",
+    valueConverter: function (v) {
+        console.log( 'parse fontSize prop')
+        return parseInt(v);
+    }
+});
 var tintColorProperty = new view_1.CssProperty({
     name: "tintColor",
     cssName: "tint-color",
@@ -54,6 +62,7 @@ var boxTypeProperty = new view_1.Property({
             : 1;
     }
 });
+
 var CheckBox = (function (_super) {
     __extends(CheckBox, _super);
     function CheckBox() {
@@ -74,6 +83,14 @@ var CheckBox = (function (_super) {
         set: function (color) {
             this._onFillColor = color;
             this._iosCheckbox.onFillColor = new color_1.Color(color).ios;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CheckBox.prototype, "fontSize", {
+        set: function (value) {
+            this._fontSize = parseInt(value);
+            this.updateFrame();   
         },
         enumerable: true,
         configurable: true
@@ -180,6 +197,19 @@ var CheckBox = (function (_super) {
     CheckBox.prototype.reload = function (value) {
         this._iosCheckbox.reload();
     };
+    CheckBox.prototype.updateFrame = function () {
+        var fontSize = 15;
+        if (this.style.fontSize) {
+            fontSize = this.style.fontSize;
+        }
+        if (this._fontSize) {
+            fontSize = this._fontSize;
+        }
+
+        this._iosCheckbox.frame = CGRectMake(0, 0, fontSize, fontSize);
+        this._iosCheckbox.center = CGPointMake(this._iosCheckbox.center.x, fontSize / 2 + 3);
+        this.style.paddingLeft = fontSize + (fontSize > 20 ? 10 : 5);
+    }
     CheckBox.prototype.initNativeView = function () {
         this.addEventListener("tap", function (args) {
             var checkbox = args.object;
@@ -188,17 +218,10 @@ var CheckBox = (function (_super) {
         this._onAnimationType = 2;
         this._offAnimationType = 2;
         this._delegate = BEMCheckBoxDelegateImpl.initWithOwner(new WeakRef(this));
-        var fontSize;
-        if (!this.style.fontSize) {
-            fontSize = 15;
-        }
-        else {
-            fontSize = this.style.fontSize;
-        }
-        this._iosCheckbox.delegate = this._delegate;
-        this._iosCheckbox.frame = CGRectMake(0, 0, fontSize, fontSize);
-        this._iosCheckbox.center = CGPointMake(this._iosCheckbox.center.x, fontSize / 2 + 3);
-        this.style.paddingLeft = fontSize + (fontSize > 20 ? 10 : 5);
+        this._iosCheckbox.delegate = this._delegate;       
+
+        this.updateFrame()
+
         this.style.textAlignment = "left";
         if (this._onCheckColor) {
             this._iosCheckbox.onCheckColor = new color_1.Color(this._onCheckColor).ios;
@@ -210,7 +233,7 @@ var CheckBox = (function (_super) {
             this._iosCheckbox.onTintColor = new color_1.Color(this._onTintColor).ios;
         }
         if (this._fillColor) {
-            this._iosCheckbox.onFillColor = new color_1.Color(this._fillColor).ios;
+            this._iosCheckbox.fillColor = new color_1.Color(this._fillColor).ios;
         }
         if (this._tintColor) {
             this._iosCheckbox.tintColor = new color_1.Color(this._tintColor).ios;
@@ -296,3 +319,4 @@ onTintColorProperty.register(view_1.Style);
 onCheckColorProperty.register(view_1.Style);
 checkBoxBackgroundColorProperty.register(view_1.Style);
 tintColorProperty.register(view_1.Style);
+fontSizeProperty.register(view_1.Style);
