@@ -118,9 +118,11 @@ var CheckBox = (function (_super) {
             return this._scale;
         },
         set: function (scale) {
-            this._scale = scale;
+          this._scale = scale;
+          if( this._android ){
             this._android.setScaleX(parseFloat(this._scale));
             this._android.setScaleY(parseFloat(this._scale));
+          }
         },
         enumerable: true,
         configurable: true
